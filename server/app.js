@@ -30,7 +30,9 @@ if (!isProduction) {
   app.use(errorHandler());
 }
 
-mongoose.connect("mongodb://localhost/lightblog");
+mongoose.connect(
+  "mongodb://sfraser:password1234@ds033135.mlab.com:33135/node-blog"
+);
 mongoose.set("debug", true);
 
 // Add models
