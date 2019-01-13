@@ -9,7 +9,8 @@ class Form extends React.Component {
     this.state = {
       title: "",
       body: "",
-      author: ""
+      author: "",
+      thoughtsAndPrayers: ""
     };
 
     this.handleChangeField = this.handleChangeField.bind(this);
@@ -21,33 +22,50 @@ class Form extends React.Component {
       this.setState({
         title: nextProps.articleToEdit.title,
         body: nextProps.articleToEdit.body,
-        author: nextProps.articleToEdit.author
+        author: nextProps.articleToEdit.author,
+        thoughtsAndPrayers: nextProps.articleToEdit.thoughtsAndPrayers
       });
     }
   }
 
   handleSubmit() {
     const { onSubmit, articleToEdit, onEdit } = this.props;
-    const { title, body, author } = this.state;
+    const { title, body, author, thoughtsAndPrayers } = this.state;
 
     if (!articleToEdit) {
       return axios
         .post("http://localhost:8000/api/articles", {
           title,
           body,
-          author
+          author,
+          thoughtsAndPrayers
         })
         .then(res => onSubmit(res.data))
-        .then(() => this.setState({ title: "", body: "", author: "" }));
+        .then(() =>
+          this.setState({
+            title: "",
+            body: "",
+            author: "",
+            thoughtsAndPrayers: ""
+          })
+        );
     } else {
       return axios
         .patch(`http://localhost:8000/api/articles/${articleToEdit._id}`, {
           title,
           body,
-          author
+          author,
+          thoughtsAndPrayers
         })
         .then(res => onEdit(res.data))
-        .then(() => this.setState({ title: "", body: "", author: "" }));
+        .then(() =>
+          this.setState({
+            title: "",
+            body: "",
+            author: "",
+            thoughtsAndPrayers: ""
+          })
+        );
     }
   }
 
@@ -59,7 +77,7 @@ class Form extends React.Component {
 
   render() {
     const { articleToEdit } = this.props;
-    const { title, body, author } = this.state;
+    const { title, body, author, thoughtsAndPrayers } = this.state;
 
     return (
       <div className="col-12 col-lg-6 offset-lg-3">
@@ -80,6 +98,12 @@ class Form extends React.Component {
           value={author}
           className="form-control my-3"
           placeholder="Article Author"
+        />
+        <input
+          onChange={ev => this.handleChangeField("thoughtsAndPrayers", ev)}
+          value={thoughtsAndPrayers}
+          className="form-control my-3"
+          placeholder="How many thoughts and prayers?"
         />
         <button
           onClick={this.handleSubmit}
