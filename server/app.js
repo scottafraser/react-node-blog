@@ -5,6 +5,9 @@ const session = require("express-session");
 const cors = require("cors");
 const errorHandler = require("errorhandler");
 const mongoose = require("mongoose");
+const passport = require("passport");
+
+require("dotenv").config();
 
 mongoose.promise = global.Promise;
 
@@ -25,14 +28,14 @@ app.use(
     saveUninitialized: false
   })
 );
+app.use(passport.initialize());
+require("./config/passport");
 
 if (!isProduction) {
   app.use(errorHandler());
 }
 
-mongoose.connect(
-  "mongodb://sfraser:password1234@ds033135.mlab.com:33135/node-blog"
-);
+mongoose.connect(process.env.MONGO_DB);
 mongoose.set("debug", true);
 
 // Add models
